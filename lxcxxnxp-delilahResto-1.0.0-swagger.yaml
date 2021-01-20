@@ -1,0 +1,652 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: delilah resto
+  description: Rest API Delilah resto
+paths: 
+  /api/v1/register:
+    post:
+      summary: Registrar usuario.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: string
+                  example: juliansacanta
+                nombre:
+                  type: string
+                  example: julian
+                telefono:
+                  type: string
+                  example: 3533448217
+                direccion:
+                  type: string
+                  example: san martin 326
+                password:
+                  type: string
+                  example: 123
+                email:
+                  type: string
+                  example: juliancito5@gmail.com
+      responses: 
+        '200':
+          description: A user object.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Usuario creado con exito
+        '500':
+          description: Usuario ya existente
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Usuario creado con exito
+  /api/v1/login:
+    post:
+      summary: Iniciar Sesion.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: string
+                  example: julian
+                password:
+                  type: string
+                  example: 123
+      responses: 
+        '200':
+          description: Token del usuario logeado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlzYW5jaGV6MTk5MUBnbWFpbC5jb20iLCJub21icmUiOiJqdWxpYW4iLCJpZCI6MSwiaWF0IjoxNTk1NDc2MTE2LCJleHAiOjE1OTU0Nzk3MTZ9.UQrY5Obi7KKdfEJIvz6exYvvkkKjOCiwDVFM6TaoOjI"
+        '401':
+          description: Password ya existente
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password ya existente
+  /api/v1/admin/{user}:
+    put:
+      summary: Convierte en admin a un usuario.
+      parameters:
+        - name: user
+          in: path
+          description: Usuario
+          required: true
+          schema:
+            type: string
+            example: juliancito
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlzYW5jaGV6MTk5MUBnbWFpbC5jb20iLCJub21icmUiOiJqdWxpYW4iLCJpZCI6MSwiaWF0IjoxNTk1NDc2MTE2LCJleHAiOjE1OTU0Nzk3MTZ9.UQrY5Obi7KKdfEJIvz6exYvvkkKjOCiwDVFM6TaoOjI"
+          required: true            
+      responses: 
+        '200':
+          description: Da privilegios de admin al usuario.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Este usuario ahora es admin"
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hubo un error   
+        '405':
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Este usuario ya es admin 
+  /api/v1/productos:
+    post:
+      summary: Crea un nuevo producto.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: hamburguesa
+                precio:
+                  type: integer
+                  example: 200
+                imagen: 
+                  type: string
+                  format: binary
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlzYW5jaGV6MTk5MUBnbWFpbC5jb20iLCJub21icmUiOiJqdWxpYW4iLCJpZCI6MSwiaWF0IjoxNTk1NDc2MTE2LCJleHAiOjE1OTU0Nzk3MTZ9.UQrY5Obi7KKdfEJIvz6exYvvkkKjOCiwDVFM6TaoOjI"
+          required: true            
+      responses: 
+        '200':
+          description: Crear un nuevo producto.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "added product"
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hubo un error   
+    get:
+      summary: Lista de productos.
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlzYW5jaGV6MTk5MUBnbWFpbC5jb20iLCJub21icmUiOiJqdWxpYW4iLCJpZCI6MSwiaWF0IjoxNTk1NDc2MTE2LCJleHAiOjE1OTU0Nzk3MTZ9.UQrY5Obi7KKdfEJIvz6exYvvkkKjOCiwDVFM6TaoOjI"
+          required: true            
+      responses: 
+        '200':
+          description: Crear un nuevo producto.
+          content:
+            appl:
+              example: [
+                          {
+                            "id": "0NO8DNVWuL",
+                            "nombre": "polser hotdog",
+                            "precio": 400,
+                            "imagen": "8Pyske8uV.png"
+                          },
+                          {
+                              "id": "WGzqA7smsR",
+                              "nombre": "Hamburguesa",
+                              "precio": 350,
+                              "imagen": "rLGNsLYlb.jpeg"
+                          },
+                          {
+                              "id": "yGu9LKh1RJ",
+                              "nombre": "hamburguesa completa",
+                              "precio": 350,
+                              "imagen": "zOnaqHEh5.jpeg"
+                          }
+                        ]
+              
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hubo un error 
+  /api/v1/productos{id}:  
+    get:
+      summary: Producto segun su id.
+      parameters:
+        - name: id
+          in: path
+          description: primary key del producto
+          required: true
+          schema:
+            type: string
+            example: 1
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlzYW5jaGV6MTk5MUBnbWFpbC5jb20iLCJub21icmUiOiJqdWxpYW4iLCJpZCI6MSwiaWF0IjoxNTk1NDc2MTE2LCJleHAiOjE1OTU0Nzk3MTZ9.UQrY5Obi7KKdfEJIvz6exYvvkkKjOCiwDVFM6TaoOjI"
+          required: true            
+      responses: 
+        '200':
+          description: Producto segun su id.
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: yGu9LKh1RJ
+                  nombre:
+                    type: string
+                    example: hamburguesa
+                  precio:
+                    type: integer
+                    example: 350
+                  imagen:
+                    type: string
+                    example: zOnaqHEh5.jpeg
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hubo un error
+    put:
+      summary: Editar producto.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: hamburguesa
+                precio:
+                  type: integer
+                  example: 200
+                imagen: 
+                  type: string
+                  format: binary
+      parameters:
+        - name: id
+          in: path
+          description: primary key del producto
+          required: true
+          schema:
+            type: string
+            example: 1
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlzYW5jaGV6MTk5MUBnbWFpbC5jb20iLCJub21icmUiOiJqdWxpYW4iLCJpZCI6MSwiaWF0IjoxNTk1NDc2MTE2LCJleHAiOjE1OTU0Nzk3MTZ9.UQrY5Obi7KKdfEJIvz6exYvvkkKjOCiwDVFM6TaoOjI"
+          required: true            
+      responses: 
+        '200':
+          description: Producto edirtado con exito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Producto editado"
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error
+    delete:
+      summary: Eliminar producto.
+      parameters:
+        - name: id
+          in: path
+          description: primary key del producto
+          required: true
+          schema:
+            type: string
+            example: 1
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlzYW5jaGV6MTk5MUBnbWFpbC5jb20iLCJub21icmUiOiJqdWxpYW4iLCJpZCI6MSwiaWF0IjoxNTk1NDc2MTE2LCJleHAiOjE1OTU0Nzk3MTZ9.UQrY5Obi7KKdfEJIvz6exYvvkkKjOCiwDVFM6TaoOjI"
+          required: true            
+      responses: 
+        '200':
+          description: Producto eliminado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Producto eliminado"
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error                    
+  /api/v1/pedidos:
+    post:
+      summary: Crea un nuevo pedido.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: yGu9LKh1RJ
+                  nombre:
+                    type: string
+                    example: hamburguesa
+                  precio:
+                    type: integer
+                    example: 350
+                  imagen:
+                    type: string
+                    example: zOnaqHEh5.jpeg
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlzYW5jaGV6MTk5MUBnbWFpbC5jb20iLCJub21icmUiOiJqdWxpYW4iLCJpZCI6MSwiaWF0IjoxNTk1NDc2MTE2LCJleHAiOjE1OTU0Nzk3MTZ9.UQrY5Obi7KKdfEJIvz6exYvvkkKjOCiwDVFM6TaoOjI"
+          required: true            
+      responses: 
+        '200':
+          description: Crear un nuevo pedido.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Pedido creado con exito"
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hubo un error
+    get:
+      summary: Lista de pedidos.
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlzYW5jaGV6MTk5MUBnbWFpbC5jb20iLCJub21icmUiOiJqdWxpYW4iLCJpZCI6MSwiaWF0IjoxNTk1NDc2MTE2LCJleHAiOjE1OTU0Nzk3MTZ9.UQrY5Obi7KKdfEJIvz6exYvvkkKjOCiwDVFM6TaoOjI"
+          required: true            
+      responses: 
+        '200':
+          description: Lista de pedidos.
+          content:
+            application/json:
+              example: [
+  {
+    "id": 1,
+    "estado": "PREPARANDO",
+    "hora": "00:43:29",
+    "pago": 400,
+    "usuarioId": 1,
+    "productos": [
+      {
+        "idPedidoProducto": 1,
+        "id": "0NO8DNVWuL",
+        "nombre": "polser hotdog",
+        "precio": 400,
+        "imagen": "KqOanm0KW.jpeg",
+        "pedidoId": 1
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "estado": "NUEVO",
+    "hora": "00:43:42",
+    "pago": 1100,
+    "usuarioId": 1,
+    "productos": [
+      {
+        "idPedidoProducto": 2,
+        "id": "0NO8DNVWuL",
+        "nombre": "polser hotdog",
+        "precio": 400,
+        "imagen": "KqOanm0KW.jpeg",
+        "pedidoId": 2
+      },
+      {
+        "idPedidoProducto": 3,
+        "id": "WGzqA7smsR",
+        "nombre": "Hamburguesa",
+        "precio": 350,
+        "imagen": "rLGNsLYlb.jpeg",
+        "pedidoId": 2
+      },
+      {
+        "idPedidoProducto": 4,
+        "id": "yGu9LKh1RJ",
+        "nombre": "hamburguesa completa",
+        "precio": 350,
+        "imagen": "zOnaqHEh5.jpeg",
+        "pedidoId": 2
+      }
+    ]
+  }
+]
+              
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hubo un error                 
+  /api/v1/pedidos/{id}:
+    get:
+      summary: Pedido segun su id.
+      parameters:
+        - name: id
+          in: path
+          description: primary key del pedido
+          required: true
+          schema:
+            type: string
+            example: 1
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlzYW5jaGV6MTk5MUBnbWFpbC5jb20iLCJub21icmUiOiJqdWxpYW4iLCJpZCI6MSwiaWF0IjoxNTk1NDc2MTE2LCJleHAiOjE1OTU0Nzk3MTZ9.UQrY5Obi7KKdfEJIvz6exYvvkkKjOCiwDVFM6TaoOjI"
+          required: true            
+      responses: 
+        '200':
+          description: Pedido segun su id.
+          content: 
+            application/json:
+              example: [
+  {
+    "id": 1,
+    "estado": "PREPARANDO",
+    "hora": "00:43:29",
+    "pago": 400,
+    "usuarioId": 1,
+    "productos": [
+      {
+        "idPedidoProducto": 1,
+        "id": "0NO8DNVWuL",
+        "nombre": "polser hotdog",
+        "precio": 400,
+        "imagen": "KqOanm0KW.jpeg",
+        "pedidoId": 1
+      }
+    ]
+  }
+]
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hubo un error
+    put:
+      summary: Editar estado del pedido.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  estado:
+                    type: string
+                    example: PREPARANDO
+      parameters:
+        - name: id
+          in: path
+          description: primary key del producto
+          required: true
+          schema:
+            type: string
+            example: 1
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlzYW5jaGV6MTk5MUBnbWFpbC5jb20iLCJub21icmUiOiJqdWxpYW4iLCJpZCI6MSwiaWF0IjoxNTk1NDc2MTE2LCJleHAiOjE1OTU0Nzk3MTZ9.UQrY5Obi7KKdfEJIvz6exYvvkkKjOCiwDVFM6TaoOjI"
+          required: true            
+      responses: 
+        '200':
+          description: Estado del pedido modificado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Estado del pedido modificado"
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error
+    delete:
+      summary: Eliminar pedido.
+      parameters:
+        - name: id
+          in: path
+          description: primary key del producto
+          required: true
+          schema:
+            type: string
+            example: 1
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imp1bGlzYW5jaGV6MTk5MUBnbWFpbC5jb20iLCJub21icmUiOiJqdWxpYW4iLCJpZCI6MSwiaWF0IjoxNTk1NDc2MTE2LCJleHAiOjE1OTU0Nzk3MTZ9.UQrY5Obi7KKdfEJIvz6exYvvkkKjOCiwDVFM6TaoOjI"
+          required: true            
+      responses: 
+        '200':
+          description: Pedido eliminado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Pedido eliminado"
+        '404':
+          description: Pedido no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Pedido no encontrado"                    
+        '500':
+          description: Internal server error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Error                    
+# Added by API Auto Mocking Plugin
+servers:
+# Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: virtserver.swaggerhub.com/lxcxxnxp/DelilahResto/1.0.0
+  - description: url de prueba en servidor local
+    url: http://localhost:5500
